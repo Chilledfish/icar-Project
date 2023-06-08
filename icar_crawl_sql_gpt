@@ -1,0 +1,82 @@
+import sqlite3
+import pickle
+from urllib.parse import quote
+from urllib.request import urlopen
+import icar_normalize
+from bs4 import BeautifulSoup
+
+# create a connection object to the database
+conn = sqlite3.connect('icar_db.sqlite')
+
+# create a cursor object
+cur = conn.cursor()
+
+# create the table to store the data
+cur.execute('''CREATE TABLE IF NOT EXISTS icar_data
+               (id INTEGER PRIMARY KEY, 
+                make TEXT,
+                normalized_model TEXT,
+                initial_model TEXT,
+                url TEXT)''')
+
+# function to get a BeautifulSoup object from a URL and tag
+def get_soup(url, tag):
+    html = urlopen(url)
+    soup = BeautifulSoup(html, "html.parser")
+    result = soup.find_all(tag[0], tag[1])
+    return result
+
+# function to create a URL for a given model name
+def create_url(model_name, icar_url="https://www.icar.co.il"):
+    quoted_model_name = quote(model_name)
+    if quoted_model_name[0] != '/':
+        quoted_model_name = '/' + quoted_model_name
+    page_url = icar_url + quoted_model_name
+    return page_url
+
+# function to get a dictionary of initial model names and URLs for a given make
+def get_initial_models(make):
+    make_len = len(make) + 1
+    make_url = create_url(make)
+    tag = 'div', {'class': 'row cars manufatures'}
+    soup_model_find = get_soup(make_url, tag)
+    models_from_soup = [y.text.strip('\n').replace(' ', '_') for x in soup_model_find for y in x if
+                        len(y.text.strip('\n')) > 0]
+    icar_models = list(set(models_from_soup))
+    initial_models = [x.replace('_', ' ')[make_len:] for x in icar_models]
+    model_urls = [f"{make_url}/{quote(x)}" for x in icar_models]
+    model_dict = dict(zip(initial_models, model_urls))
+    return model_dict
+
+# function to get a list of URLs for a given generation URL
+def get_versions(gen_url):
+    tag = 'div', {'class': 'form-check'}
+    soup_find_models = get_soup(gen_url, tag)
+    children = [x.findChildren() for x in soup_find_models]
+    version_names = [x[3].attrs['href'] for x in children]
+    version_urls = [icar_url + quote(x) for x in version_names]
+    return version_urls
+
+# get the data and store it in the database
+makes = ["אודי"]
+
+for make in makes:
+    model_dict = get_initial_models(make)
+    for model in model_dict:
+        initial_model = model
+        model_url = model_dict[model]
+        normalized_model = icar_normalize.audi_normalize(model)
+        for gen_url in get_generations(model_url):
+            urls = get_versions(gen_url)
+            for url in urls:
+                # insert the data into the database
+                cur.execute('''INSERT INTO icar_data (make, normalized_model, initial_model, url)
+                               VALUES (?, ?, ?, ?)''', (make, normalized_model, initial_model, url))
+
+# commit the changes to the database and close the connection
+conn.commit()
+
+SELECT urls
+FROM cars
+WHERE normalized_model = 'A1';
+conn.close()
