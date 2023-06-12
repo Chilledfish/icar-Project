@@ -1,0 +1,85 @@
+Mitsubishi
+Voyah
+Toyota
+Cenntro 
+Lamb
+Goupil
+Suzuki
+De Tomaso
+Lynk & Co
+Chrysler
+DFSK
+Daihatsu
+Lancia
+Cadillac
+Saab
+Mazda
+LEVC
+Seat
+BMW
+Polestar
+EVEC
+Dodge
+MG
+Ssangyong
+Nissan
+Great Wall
+Borg
+AvtoVAZ
+Smart
+Bentley
+Maan
+Iveco
+DS
+Geely
+Tesla
+Skods
+Fiat
+Volvo
+Seres
+VW, Volkswagen
+Audi
+Pontiac
+Telco
+Jaguar
+Dacia
+Jeep
+Mercedes, Mercedes-Benz
+Renault
+Piaggio
+Skywell
+Hummer
+Daewoo
+MCC
+Isuzu
+Peugeot
+Porche
+Aiways
+WEY
+Lexus
+Ferrari
+BYD
+Maserati
+Citroen
+Cherry
+Ford
+Lincoln
+Honda
+ORA
+Buick
+Land Rover
+GEC, GE
+Karma
+Subaru
+Leapmotor
+Alfa Romeo
+Dongfeng
+Opel, Opel/Vauxhall
+GAC
+Maxus
+Kia
+Hongqi
+Hyundai
+GM
+Chevrolet
+Aston Martin
