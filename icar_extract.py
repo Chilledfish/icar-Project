@@ -286,3 +286,4 @@ def main():
 
 	b=5
 a = main()
+b=5
